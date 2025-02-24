@@ -1,6 +1,6 @@
 from flask import Flask, render_template, send_from_directory
-import os 
-from flask import Flask, jsonify, request, re
+import os, re
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
