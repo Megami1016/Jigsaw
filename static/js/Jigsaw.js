@@ -4,7 +4,7 @@ let Terminal = 0;//0=PCFULL~3/4 , 1=iPhone,Android
 // CSS切り替え関数        
 function switchCSS() {
     const cssSwitcher = document.getElementById("css-switcher");
-    const width = window.innerWidth;
+    const width = document.documentElement.clientWidth;
     const PCFull_width = 2880;
       
     if (width <= PCFull_width * 0.5) {
