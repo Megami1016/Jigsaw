@@ -13,12 +13,12 @@ function switchCSS() {
       pieceContainerHeight = 500;
       Terminal=1;
       console.log(`画面幅: ${width}px - PCHalf.css 適用`);
-    } else if (width <= PCFull_width * 0.75) {
+    } else if (PCFull_width * 0.5 < width && width <= PCFull_width * 0.75) {
       cssSwitcher.href = "/static/css/PC/3Quarters/Jigsaw_PC-3Q.css";
       pieceContainerWidth = 300;
       Terminal=0;
       console.log(`画面幅: ${width}px - PC3Q.css 適用`);
-    } else {
+    } else if(PCFull_width*0.75 < width){
       cssSwitcher.href = "/static/css/PC/Full/Jigsaw_PC-Full.css";
       pieceContainerWidth = 600;
       Terminal=0;
