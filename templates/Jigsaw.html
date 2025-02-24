@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>『ヘブンバーンズレッド』ジグソーパズル</title>
+    <link rel="stylesheet" href="/static/css/PC/Full/Jigsaw_PC-Full.css" id="css-switcher">
+</head>
+<body>
+    <h1>『ヘブンバーンズレッド』✧✧✧ジグソーパズル✧✧✧</h1>
+    <div id="data-container">
+        <div id="image-container">
+       <h2>完成形</h2>
+       <!-- 画像はJavaScriptで表示される -->
+        </div>
+        <div id="ranking-container">
+            <div id="timer"></div>
+            <div id="ranking"></div>
+            <form id="setting">
+                <!-- 1列目: ボタン -->
+    <div class="setting-group">
+        <button type="button" onclick="loadPuzzle()">パズルを生成する</button>
+    </div>
+
+    <!-- 2列目: ビギナー & エキスパート -->
+    <div class="setting-group">
+        <label><input type="radio" name="level" value="easy" checked>ビギナー</label>
+        <label><input type="radio" name="level" value="normal">エキスパート</label>
+    </div>
+
+    <!-- 3列目: カオス & アンノウン -->
+    <div class="setting-group">
+        <label><input type="radio" name="level" value="hard">カオス</label>
+        <label><input type="radio" name="level" value="veryHard">アンノウン</label>
+    </div>
+            </form>
+        </div>
+    </div>
+    <div id="puzzle-container"></div>
+    <p id="message"></p>
+    
+<script src="{{ url_for('static', filename='js/Jigsaw.js') }}"></script>
+</body>
+</html>

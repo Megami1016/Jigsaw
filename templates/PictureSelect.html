@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>へブバン ジグソーパズル</title>
+    <link rel="stylesheet" href="/static/css/Character.css">
+</head>
+<body>
+    <h1>『ヘブンバーンズレッド』✧✧✧ジグソーパズル✧✧✧</h1>
+    <div id="how-to-play">
+        <h2>~ 遊び方 ~</h2>
+        <p>1:生成したいキャラクターの所属部隊を選択<br>
+           2:キャラクター名を選択<br>
+           3:キャラクターの中から好きな画像を選択<br>
+           4:「作戦開始!」のボタンで選択した画像のジグソーパズルが遊べます。<br>
+           5: 難易度を選択し、パズルを生成を押してください。<br>
+           6: ピースを動かすとタイマーが開始されます。<br>
+           7: 選択した画像に関わらず難易度ごとにランキングを用意しているので、是非上位を狙いやがれ ♪<br>   
+        </p>
+    </div>
+    <div id="unit-selection">
+        <label for="Unit">所属部隊を選択してください</label><br>
+        <select id="Unit" name="Unit">
+            <option value="">選択してください</option>
+            <optgroup label="基本キャラクター">
+                <option value="第31A部隊">第31A部隊</option>
+                <option value="第31B部隊">第31B部隊</option>
+                <option value="第31C部隊">第31C部隊</option>
+                <option value="第31D部隊">第31D部隊</option>
+                <option value="第31E部隊">第31E部隊</option>
+                <option value="第31F部隊">第31F部隊</option>
+                <option value="第30G部隊">第30G部隊</option>
+                <option value="第31X部隊">第31X部隊</option>
+            </optgroup>
+            <optgroup label="その他">
+                <option value="司令部">司令部</option>
+                <option value="AngelBeets">AB!</option>
+                <option value="キャンサー">キャンサー</option>
+                <option value="ストーリー限定">ストーリー限定</option>
+            </optgroup>
+        </select>
+    </div>
+    
+    <div id="character-selection">
+        <label for="Character">キャラを選択:</label>
+        <select id="Character">
+            <option value="">-- 先に所属部隊を選択 --</option>
+        </select>
+    </div>
+    <div id="characterImage"></div>
+    <div>
+        <button id="start">作戦開始！</button>
+    </div>
+    <div id="notice">
+        <h2>~ 注意事項 ~</h2>
+        <p>
+            ※あくまで暇つぶし用のサイトであり、収益等は一切発生しておりません。<br>
+            ご使用上の過失の有無を問わず、本プログラムの運用において発生した損害に対するいかなる請求があったとしても、その責任を負うものではありません。<br>
+            キャラのスタイルイラストをデフォルトで追加していますが、Discord,X(旧Twitter)等のSNSでご連絡頂ければ、へブバン関連の画像のみ登録します。<br>
+            二次創作イラストを登録の際は、必ず本人様の許可を取ってからご連絡・提出の方をお願いします。<br><br>
+            画像サイズは横:1100弱,縦:600弱だと綺麗に収まりますが、サイズは特に限定していません<br>
+            <br>
+            お問合せ先 : <a href="https://twitter.com/megami1016" target="_blank" rel="noopener noreferrer">製作者のX(旧Twitter)アカウント</a>
+        </p>
+    </div>
+    <script src="{{ url_for('static', filename='js/Character.js') }}"></script>
+    <div id="notice">
+        <h2>~ 製作者のつぶやき ~</h2>
+        <p>
+            制作の意図や更新内容、その他へブバンに関する個人的などうでもいい話を書いて行きます。暇すぎる人向けです。<br>                     
+            へブバンLIVE現地に今年初めて行くことができました。その際、へブバンは家のpcでアーツラン中だったので当時の私は何もプレイするものがない...<br>
+            だけど、せっかくならへブバン関連で盛り上がりたい...!!（まぁその当時は、なろう小説タイトル当てというクソゲー（笑）で時間潰ししていたんですけど）<br>
+            そんなこんなで暇つぶし用のサイトでも作るか！となってこのサイトを作ったので、同じ状況になった際に活躍してくれれば幸いです。<br><br>
+            ~難易度とランキングについて~<br>
+            難易度はへブバンユーザーなら分かるようにスコアタ基準にしてみました。<br>
+            レギュラー以上はピースの回転も必要になります。<br>
+            アンノウンはマジでムズい（笑）PCの全画面でやって背景の草に沼った結果1時間かかってます。<br>
+            ランキングは画像に関わらず難易度のみの実装になっています。データーベース使ってない関係上、6位以下は記録に残りません<br>
+            勿論、画像によって難易度に影響が出ると思いますが、緩いランキングなので悪しからず<br><br>
+            ~最後に~<br>
+            宣伝になりますが、過去にアーツバトルで利用できるデッキシミュレーションサイトも作成しています。<br>
+            <a href="https://megami-arts-hbr.onrender.com/">へブバンデッキシミュレータはこちらから</a><br>
+            また、楽しい・暇つぶしになったと思ったら、是非 #へブバンジグソーパズル で感想等お願いします！<br>
+            次はいつ制作を始めるか未定ですが、誰かに全キャラ分のぷよ風イラスト作って貰ってゲーム制作してもいいかも?<br>
+            以下更新内容になります。ここまで読んでくれてありがとう！！
+        </p>
+        <p>
+            ~更新内容~<br>
+            現在、更新情報はありません。<br>
+        </p>
+    </div>
+</body>
+</html>
