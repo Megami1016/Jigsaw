@@ -7,7 +7,13 @@ function switchCSS() {
     const width = document.documentElement.clientWidth;
     const PCFull_width = 2880;
       
-    if (width <= PCFull_width * 0.5) {
+    if(width <= 1260){
+        cssSwitcher.href = "/static/css/iPhone/Jigsaw_iPhone.css";
+        pieceContainerWidth = 0.6;
+        pieceContainerHeight = 500;
+        Terminal=1;
+        console.log(`画面幅: ${width}px - iPhone.css 適用`);
+    }else if (1260 < width && width <= PCFull_width * 0.5) {
       cssSwitcher.href = "/static/css/PC/Half/Jigsaw_PC-Half.css";
       pieceContainerWidth = 0.8;
       pieceContainerHeight = 500;
