@@ -1,6 +1,6 @@
 from flask import Flask, render_template, send_from_directory
 import os 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, re
 
 app = Flask(__name__)
 
@@ -8,29 +8,30 @@ app = Flask(__name__)
 def index():
     return render_template('PictureSelect.html')
 
+def natural_sort_key(s):
+    """ファイル名を自然順ソートするためのキーを生成"""
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
+
+
 @app.route('/get_images/<unit>/<character>')
 def get_images(unit, character):
-    folder_path = os.path.join('static', 'image', unit, character)  # 正しいパスの生成
-    print(f"画像フォルダの確認: {folder_path}")  # デバッグ用
+    folder_path = os.path.join('static', 'image', unit, character)
+    print(f"画像フォルダの確認: {folder_path}")
 
     if not os.path.exists(folder_path):  
-        print("フォルダが存在しません")  # デバッグ用
+        print("フォルダが存在しません")
         return jsonify([])  
 
-    # 画像ファイルを取得し、名前順にソート
+    # 画像ファイルを取得し、自然順ソート
     images = sorted(
         [
             f"/static/image/{unit}/{character}/{file}"
             for file in os.listdir(folder_path)
-            if file.lower().endswith(('.jpg', '.png'))  # 大文字小文字対応
+            if file.lower().endswith(('.jpg', '.png'))
         ],
-        key=lambda x: x.split('/')[-1]  # ファイル名でソート
+        key=lambda x: natural_sort_key(x.split('/')[-1])  # ファイル名を基準に自然順ソート
     )
 
-    return jsonify(images)
-
-
-    print(f"取得した画像リスト: {images}")  # デバッグ用
     return jsonify(images)
 
 @app.route('/Jigsaw')
