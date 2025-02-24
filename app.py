@@ -17,11 +17,18 @@ def get_images(unit, character):
         print("フォルダが存在しません")  # デバッグ用
         return jsonify([])  
 
-    images = [
-        f"/static/image/{unit}/{character}/{file}"  
-        for file in os.listdir(folder_path)  
-        if file.lower().endswith(('.jpg', '.png'))  # 大文字小文字対応
-    ]
+    # 画像ファイルを取得し、名前順にソート
+    images = sorted(
+        [
+            f"/static/image/{unit}/{character}/{file}"
+            for file in os.listdir(folder_path)
+            if file.lower().endswith(('.jpg', '.png'))  # 大文字小文字対応
+        ],
+        key=lambda x: x.split('/')[-1]  # ファイル名でソート
+    )
+
+    return jsonify(images)
+
 
     print(f"取得した画像リスト: {images}")  # デバッグ用
     return jsonify(images)
