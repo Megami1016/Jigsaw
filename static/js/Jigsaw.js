@@ -7,7 +7,13 @@ function switchCSS() {
     const width = document.documentElement.clientWidth;
     const PCFull_width = 2880;
       
-    if(width <= 1260){
+    if(width<=440){
+        cssSwitcher.href = "/static/css/iPhone/~440/Jigsaw_iPhone.css";
+        pieceContainerWidth = 0.6;
+        pieceContainerHeight = 500;
+        Terminal=1;
+        console.log(`画面幅: ${width}px - iPhone.css 適用`);
+    }else if(440 < width && width <= 1260){
         cssSwitcher.href = "/static/css/iPhone/Jigsaw_iPhone.css";
         pieceContainerWidth = 0.6;
         pieceContainerHeight = 500;

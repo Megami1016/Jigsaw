@@ -1,3 +1,31 @@
+function switchCSS() {
+    const cssSwitcher = document.getElementById("css-switcher");
+    const width = document.documentElement.clientWidth;
+    const PCFull_width = 2880;
+      
+    if(width<=440){
+        cssSwitcher.href = "/static/css/iPhone/~440/Character_iPhone.css";
+        console.log(`画面幅: ${width}px - iPhone.css 適用`);
+    }else if(440 < width && width <= PCFull_width){
+        cssSwitcher.href = "/static/css/Character.css";
+        console.log(`画面幅: ${width}px - PC.css 適用`);
+    }
+  }
+
+  // 初期化時とリサイズ時に適用
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      switchCSS();
+      console.log("初期画面幅:", window.innerWidth);
+    }, 100);
+  });
+
+  window.addEventListener("resize", () => {
+    switchCSS();
+    console.log("リサイズ後の画面幅:", window.innerWidth);
+  });
+
+
 document.getElementById("Unit").addEventListener("change", function() {
     let CharacterSelect = document.getElementById("Character");
     let selectedCategory = this.value;
