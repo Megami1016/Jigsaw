@@ -74,16 +74,24 @@ const RANKING_KEY = {
     veryHard: "ranking_veryHard"
 };
 
+// 難易度ごとのデフォルトランキング（5位までのデフォルトタイム）
+const DEFAULT_RANKING = {
+    easy: Array(5).fill(60),       // [60, 60, 60, 60, 60]
+    normal: Array(5).fill(300),    // [300, 300, 300, 300, 300]
+    hard: Array(5).fill(1200),     // [1200, 1200, 1200, 1200, 1200]
+    veryHard: Array(5).fill(3000)  // [3000, 3000, 3000, 3000, 3000]
+};
+
 // 初回のみデフォルトのランキングをセット
 function initializeRanking() {
     Object.keys(RANKING_KEY).forEach(difficulty => {
-        if (!localStorage.getItem(RANKING_KEY[difficulty])) {
-            const defaultRanking = Array(5).fill(getDefaultTime(difficulty));
-            localStorage.setItem(RANKING_KEY[difficulty], JSON.stringify(defaultRanking));
+        let storedData = localStorage.getItem(RANKING_KEY[difficulty]);
+
+        if (!storedData || storedData === "null") { // NULLや"null"の場合も考慮
+            localStorage.setItem(RANKING_KEY[difficulty], JSON.stringify(DEFAULT_RANKING[difficulty]));
         }
     });
 }
-
 let currentDifficulty = "easy";
 let rows = 3, cols = 5, rotaON = 0; 
 const puzzleContainer = document.getElementById("puzzle-container");
