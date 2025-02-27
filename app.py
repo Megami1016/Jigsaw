@@ -27,7 +27,7 @@ def get_images(unit, character):
         [
             f"/static/image/{unit}/{character}/{file}"
             for file in os.listdir(folder_path)
-            if file.lower().endswith(('.jpg', '.png'))
+            if file.lower().endswith(('.jpg', '.webp'))
         ],
         key=lambda x: natural_sort_key(x.split('/')[-1])  # ファイル名を基準に自然順ソート
     )
