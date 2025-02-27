@@ -1,3 +1,4 @@
+/* 共通スタイル */
 body {
     background: 
         radial-gradient(circle, rgba(255, 230, 200, 0.8) 10%, rgba(200, 150, 100, 0.6) 90%),
@@ -5,15 +6,14 @@ body {
     background-size: cover;
 }
 h1 {
-    text-align: center;
     width: 80%;
+    text-align: center;
     margin: 20px auto;
     padding: 15px;
     background: #fdf5e6; /* 優しい紙っぽい色 */
     border-radius: 10px; /* 角を丸くする */
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); /* 影をつけて浮かせる */
     font-family: "Arial", sans-serif; /* 読みやすいフォント */
-    font-size: 80%;
     font-weight: bold;
     color: #5a3e1b; /* 温かみのあるブラウン */
     border: 3px solid #d4a76a; /* 少し濃いめの枠 */
@@ -36,7 +36,6 @@ h1 {
 
 /* 見出し */
 #how-to-play h2, #notice h2 {
-    font-size: 90%;
     font-weight: bold;
     color: #5a3e1b;
     margin-bottom: 15px;
@@ -44,7 +43,6 @@ h1 {
 
 /* 説明文 */
 #how-to-play p, #notice p {
-    font-size: 80%;
     line-height: 1.5;
     color: #4a3d29; /* 温かみのあるブラウン */
 }
@@ -52,7 +50,6 @@ h1 {
 /* ボタンのスタイル */
 button {
     padding: 10px 20px;
-    font-size: 80%;
     background-color: #f39c12;
     color: white;
     border: none;
@@ -82,7 +79,6 @@ button:hover {
 
 /* ラベルのスタイル */
 label {
-    font-size: 90%;
     color: #5a3e1b; /* 温かみのあるブラウン */
     font-weight: bold;
     margin-bottom: 10px;
@@ -91,7 +87,6 @@ label {
 
 /* セレクトボックス */
 select {
-    font-size: 80%;
     padding: 10px;
     border: 2px solid #8B5E3C; /* セレクトボックスのフチ */
     border-radius: 8px;
@@ -129,17 +124,13 @@ option:hover {
 /* 画像表示セクション */
 #characterImage {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 自動的に画像を横並びに */
-    gap: 20px; /* 画像間のスペース */
-    padding: 20px;
+    padding: 10px;
     overflow-y: auto; /* y軸方向にスクロールを追加 */
-    max-height: 80vh; /* ページの80%の高さに制限 */
-    margin: 0 auto;
     border: 3px solid #8B5E3C; /* フチ付き */
     border-radius: 15px;
     background-color: rgba(255, 255, 255, 0.8); /* 背景に透明感 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 影をつけて浮き上がらせる */
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 /* 画像のスタイル */
@@ -149,7 +140,6 @@ option:hover {
     border-radius: 10px; /* 画像の角を丸く */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 画像に影をつけて浮き上がらせる */
     transition: transform 0.3s ease; /* 画像の拡大アニメーション */
-    transform: scale(0.9);  /* 80% のサイズに縮小 */
 }
 
 /* 画像にホバーした際のエフェクト */
@@ -158,12 +148,6 @@ option:hover {
     cursor: pointer; /* ポインターが画像上に乗るとカーソルが変わる */
 }
 
-/* スマホ用スタイル */
-@media screen and (max-width: 768px) {
-    #characterImage {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* スマホでも小さい画像が横並びに */
-    }
-}
 /* ------------------------ */
 
 /* 作戦開始ボタン */
@@ -171,7 +155,6 @@ option:hover {
     background-color: #FFCC00; /* 明るいイエローで目立たせる */
     border: 2px solid #E6A700; /* ボタンのフチを少し濃い目の黄色に */
     padding: 15px 30px; /* ボタンに余白を追加 */
-    font-size: 120%; /* 文字を大きめに */
     font-weight: bold;
     color: #5A3E1B; /* 温かみのあるブラウン */
     text-transform: uppercase; /* ボタン文字を大文字に */
@@ -196,3 +179,154 @@ option:hover {
 #start:active {
     transform: translateY(2px); /* クリック時に少し沈むエフェクト */
 }
+
+
+/* スマホ（iPhone 13-16, Android 390px～414px） */
+@media screen and (max-width: 460px) {
+    h1 {
+        font-size: 70%;
+    }
+    
+    #how-to-play h2, #notice h2 {
+        font-size: 90%;
+    }
+    
+    #how-to-play p, #notice p {
+        font-size: 80%;
+    }
+    
+    button {
+        font-size: 80%;
+    }
+    
+    label {
+        font-size: 90%;
+    }
+    
+    select {
+        font-size: 80%;
+    }
+    
+    #characterImage{
+        width: 80%;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 自動的に画像を横並びに */
+        max-height: 40vh;
+        justify-items: center;
+        margin: 7%;
+    }
+
+    #start {
+        font-size: 120%; 
+    }
+    
+}
+
+/* 小型タブレット（iPad miniなど, 415px～511px） */
+@media screen and (min-width: 461px) and (max-width: 649px) {
+    h1 {
+        font-size: 80%;
+    }
+    
+    #how-to-play h2, #notice h2 {
+        font-size: 100%;
+    }
+    
+    #how-to-play p, #notice p {
+        font-size: 90%;
+    }
+    
+    button {
+        font-size: 90%;
+    }
+    
+    label {
+        font-size: 100%;
+    }
+    
+    select {
+        font-size: 90%;
+    }
+     
+    #characterImage{
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 自動的に画像を横並びに */
+        max-height: 40vh;
+        justify-items: center;
+    }
+
+    #start {
+        font-size: 130%; 
+    }
+    
+}
+
+@media screen and (min-width: 650px) and (max-width: 761px){
+    h1 {
+        width: 80%;
+        font-size: 100%;
+    }
+    
+    #how-to-play h2, #notice h2 {
+        font-size: 110%;
+    }
+    
+    #how-to-play p, #notice p {
+        font-size: 100%;
+    }
+    
+    button {
+        font-size: 100%;
+    }
+    
+    label {
+        font-size: 110%;
+    }
+    
+    select {
+        font-size: 100%;
+    }
+    
+    #characterImage{
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 自動的に画像を横並びに */
+        justify-items: center;
+    }
+
+    #start {
+        font-size: 140%; 
+    }
+}
+
+@media screen and (min-width: 762px) {
+    h1 {
+        font-size: 150%;
+    }
+    
+    #how-to-play h2, #notice h2 {
+        font-size: 1.8rem;
+    }
+    
+    #how-to-play p, #notice p {
+        font-size: 1.2rem;
+    }
+    
+    button {
+        font-size: 1.2rem;
+    }
+    
+    label {
+        font-size: 1.4rem;
+    }
+    
+    select {
+        font-size: 1.2rem;
+    }
+
+    #characterImage{
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); /* 自動的に画像を横並びに */
+    
+    }
+    
+    #start {
+        font-size: 1.5rem; 
+    }
+}
+

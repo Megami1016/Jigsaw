@@ -1,31 +1,3 @@
-function switchCSS() {
-    const cssSwitcher = document.getElementById("css-switcher");
-    const width = document.documentElement.clientWidth;
-    const PCFull_width = 2880;
-      
-    if(width<=440){
-        cssSwitcher.href = "/static/css/iPhone/~440/Character_iPhone.css";
-        console.log(`画面幅: ${width}px - iPhone.css 適用`);
-    }else if(440 < width && width <= PCFull_width){
-        cssSwitcher.href = "/static/css/Character.css";
-        console.log(`画面幅: ${width}px - PC.css 適用`);
-    }
-  }
-
-  // 初期化時とリサイズ時に適用
-  document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-      switchCSS();
-      console.log("初期画面幅:", window.innerWidth);
-    }, 100);
-  });
-
-  window.addEventListener("resize", () => {
-    switchCSS();
-    console.log("リサイズ後の画面幅:", window.innerWidth);
-  });
-
-
 document.getElementById("Unit").addEventListener("change", function() {
     let CharacterSelect = document.getElementById("Character");
     let selectedCategory = this.value;
@@ -227,7 +199,10 @@ document.getElementById("Character").addEventListener("change", function() {
         
                 // 画像の URL を sessionStorage に保存
                 sessionStorage.setItem('selectedImageUrl', selectedImageUrl);
-        
+                // 環境選択を sessionStorage に保存
+                let deviceType = document.querySelector('input[name="deviceType"]:checked').value;
+                sessionStorage.setItem('deviceType', deviceType);  // デバイス情報を保存
+
                 // /Jigsaw に遷移
                 window.location.href = '/Jigsaw';
             } else {

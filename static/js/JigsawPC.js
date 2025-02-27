@@ -1,41 +1,28 @@
-let pieceContainerWidth = 400;//PC-Full時のピース置き場サイズ
+let pieceContainerWidth = 1;//PC-Full時のピース置き場サイズ
 let pieceContainerHeight = 1;
-let Terminal = 0;//0=PCFULL~3/4 , 1=iPhone,Android
+let Terminal = 0;
 // CSS切り替え関数        
 function switchCSS() {
-    const cssSwitcher = document.getElementById("css-switcher");
     const width = document.documentElement.clientWidth;
-    const PCFull_width = 2880;
       
-    if(width<=440){
-        cssSwitcher.href = "/static/css/iPhone/~440/Jigsaw_iPhone.css";
+    if(width<=750){
         pieceContainerWidth = 0.6;
-        pieceContainerHeight = 500;
+        pieceContainerHeight = 400;
         Terminal=1;
         console.log(`画面幅: ${width}px - iPhone.css 適用`);
-    }else if(440 < width && width <= 1260){
-        cssSwitcher.href = "/static/css/iPhone/Jigsaw_iPhone.css";
-        pieceContainerWidth = 0.6;
-        pieceContainerHeight = 500;
-        Terminal=1;
-        console.log(`画面幅: ${width}px - iPhone.css 適用`);
-    }else if (1260 < width && width <= PCFull_width * 0.5) {
-      cssSwitcher.href = "/static/css/PC/Half/Jigsaw_PC-Half.css";
+    }else if(750 < width && width <= 800){
+        pieceContainerWidth = 200;
+        pieceContainerHeight = 1;
+        Terminal=0;
+    }else if (800 < width && width <= 1300) {
       pieceContainerWidth = 0.8;
       pieceContainerHeight = 500;
       Terminal=1;
-      console.log(`画面幅: ${width}px - PCHalf.css 適用`);
-    } else if (PCFull_width * 0.5 < width && width <= PCFull_width * 0.75) {
-      cssSwitcher.href = "/static/css/PC/3Quarters/Jigsaw_PC-3Q.css";
+    } else if (1300 < width) {
       pieceContainerWidth = 300;
+      pieceContainerHeight = 1;
       Terminal=0;
-      console.log(`画面幅: ${width}px - PC3Q.css 適用`);
-    } else if(PCFull_width*0.75 < width){
-      cssSwitcher.href = "/static/css/PC/Full/Jigsaw_PC-Full.css";
-      pieceContainerWidth = 600;
-      Terminal=0;
-      console.log(`画面幅: ${width}px - PCFull.css 適用`);
-    }
+    } 
   }
 
   // 初期化時とリサイズ時に適用
@@ -103,7 +90,6 @@ function initializeRanking() {
         }
     });
 }
-
 // 初期化処理を実行
 initializeRanking();
 let currentDifficulty = "easy";
@@ -195,9 +181,9 @@ function updateRankingDisplay() {
 }
 
 let timerStarted = false; // タイマーが開始されたかどうかを追跡
-
+// ----------------------------------
 function loadPuzzle() {
-    toggleDrag(true);
+    //toggleDrag(true);
     stopTimer();
     timerStarted = false;
 
@@ -242,33 +228,30 @@ function loadPuzzle() {
                 piece.dataset.correctY = row * pieceHeight;
 
                 // 初期位置をランダムに設定 (CSSで制御)
-                if(Terminal===0){
+                if(Terminal===0){//横並び
                     piece.style.setProperty("--random-left", `${imageWidth + Math.random() * pieceContainerWidth}px`);
                     piece.style.setProperty("--random-top", `${Math.random() * (imageHeight - pieceHeight)}px`);
-                }else{
+                }else{//縦並び
                     piece.style.left = `${Math.random() * imageWidth * pieceContainerWidth}px`;
                     piece.style.top = `${imageHeight + Math.random() * pieceContainerHeight}px`;
                 }
-                piece.style.setProperty("--random-left", `${imageWidth + Math.random() * pieceContainerWidth}px`);
-                piece.style.setProperty("--random-top", `${Math.random() * (imageHeight - pieceHeight)}px`);
-
                 if (rotaON === 1) {
                     // ランダム回転
                     const rotation = Math.floor(Math.random() * 4) * 90;
                     piece.style.transform = `rotate(${rotation}deg)`;
 
                     // クリックで90度回転
-                    piece.addEventListener("click", function () {
-                        let currentRotation = parseInt(piece.style.transform.replace("rotate(", "").replace("deg)", "")) || 0;
-                        currentRotation = (currentRotation + 90) % 360;
-                        piece.style.transform = `rotate(${currentRotation}deg)`;
-                    });
+                     piece.addEventListener("click", function () {
+                         let currentRotation = parseInt(piece.style.transform.replace("rotate(", "").replace("deg)", "")) || 0;
+                         currentRotation = (currentRotation + 90) % 360;
+                         piece.style.transform = `rotate(${currentRotation}deg)`;
+                     });
                 }
 
-                // ドラッグ可能にする
-                piece.draggable = true;
-                piece.addEventListener("dragstart", dragStart);
-                piece.addEventListener("dragend", dragEnd);
+                 //ドラッグ可能にする
+                 piece.draggable = true;
+                 piece.addEventListener("dragstart", dragStart);
+                 piece.addEventListener("dragend", dragEnd);
 
                 pieces.push(piece);
                 puzzleContainer.appendChild(piece);
@@ -279,9 +262,9 @@ function loadPuzzle() {
 
 
 let draggedPiece = null;
-let offsetX, offsetY;
+ let offsetX, offsetY;
 
-function toggleDrag(isEnabled) {
+ function toggleDrag(isEnabled) {
     pieces.forEach(piece => {
         if (isEnabled) {
             piece.draggable = true;
@@ -305,7 +288,7 @@ function toggleDrag(isEnabled) {
     });
 }
 
-// ピースの回転を管理する関数
+//ピースの回転を管理する関数
 function rotatePiece(event) {
     let piece = event.target;
     let currentRotation = parseInt(piece.style.transform.replace('rotate(', '').replace('deg)', '')) || 0;
@@ -366,20 +349,10 @@ function snapToGrid(piece) {
 
 function checkCompletion() {
     let completed = pieces.every(piece => piece.classList.contains("correct"));
-    const messageElement = document.getElementById("message");
-
+    
     if (completed) {
-        messageElement.innerText = "完成しました！";
-        messageElement.style.display = "block"; // ✅ 表示
-        setTimeout(() => {
-            messageElement.classList.add("show"); // ✅ 徐々に表示
-        }, 10); // 少し遅らせてアニメーションを適用
         return true;
     } else {
-        messageElement.classList.remove("show"); // ✅ アニメーションをリセット
-        setTimeout(() => {
-            messageElement.style.display = "none"; // ✅ 非表示
-        }, 1000); // アニメーション後に完全に消す
         return false;
     }
 }

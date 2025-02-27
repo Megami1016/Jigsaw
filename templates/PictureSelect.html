@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>へブバン ジグソーパズル</title>
-    <link rel="stylesheet" href="/static/css/Character.css" id="css-switcher">
+    <link rel="stylesheet" href="/static/css/Character_main.css">
 </head>
 <body>
     <h1>『ヘブンバーンズレッド』✧✧✧ジグソーパズル✧✧✧</h1>
     <div id="how-to-play">
         <h2>~ 遊び方 ~</h2>
-        <p>1:生成したいキャラクターの所属部隊を選択<br>
+        <form>
+            <input type="radio" id="mobile" name="deviceType" value="mobile" checked>
+            <label for="mobile">モバイル</label>
+            <input type="radio" id="pc" name="deviceType" value="pc">
+            <label for="pc">PC</label>
+        </form>
+        <p>
+           0:遊ぶ環境を選択してください。<br>
+           1:生成したいキャラクターの所属部隊を選択<br>
            2:キャラクター名を選択<br>
            3:キャラクターの中から好きな画像を選択<br>
            4:「作戦開始!」のボタンで選択した画像のジグソーパズルが遊べます。<br>
