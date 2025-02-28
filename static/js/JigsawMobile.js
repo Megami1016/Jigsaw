@@ -178,7 +178,6 @@ function updateRankingDisplay() {
 let timerStarted = false; // タイマーが開始されたかどうかを追跡
 // ----------------------------------
 function loadPuzzle() {
-    //toggleDrag(true);
     stopTimer();
     timerStarted = false;
 
@@ -248,6 +247,7 @@ function addTouchEvents(piece) {
     let touchStartTime = 0;
     let isDragging = false;
     let startX = 0, startY = 0, offsetX = 0, offsetY = 0;
+    let isMoving = false;
 
     piece.addEventListener("touchstart", function (e) {
         touchStartTime = Date.now();
@@ -272,17 +272,25 @@ function addTouchEvents(piece) {
     });
 
     piece.addEventListener("touchmove", function (e) {
-        if (isDragging) {
+        // if (isDragging) {
             e.preventDefault(); // スクロール防止
             let touch = e.touches[0];
 
             let newX = offsetX + (touch.clientX - startX);
             let newY = offsetY + (touch.clientY - startY);
 
-            piece.style.left = `${newX}px`;
-            piece.style.top = `${newY}px`;
+            // piece.style.left = `${newX}px`;
+            // piece.style.top = `${newY}px`;
+        //}
+        if (!isMoving) {
+            isMoving = true;
+            requestAnimationFrame(() => {
+                piece.style.left = `${newX}px`;
+                piece.style.top = `${newY}px`;
+                isMoving = false;
+            });
         }
-    });
+    }, { passive: false });
 
     piece.addEventListener("touchend", function (e) {
         let touchTime = Date.now() - touchStartTime;
