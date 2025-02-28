@@ -1,6 +1,7 @@
 let pieceContainerWidth = 1;//PC-Full時のピース置き場サイズ
 let pieceContainerHeight = 1;
 let Terminal = 0;
+let isTimerRunning = false; // タイマーが動作中かを管理
 // CSS切り替え関数        
 function switchCSS() {
     const width = document.documentElement.clientWidth;
@@ -27,9 +28,7 @@ function switchCSS() {
 
   // 初期化時とリサイズ時に適用
   document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-      switchCSS();
-    }, 100);
+    switchCSS();
   });
 
   window.addEventListener("resize", () => {
@@ -127,6 +126,7 @@ function startTimer() {
     clearInterval(timerInterval); // 既存のタイマーをリセット
     startTime = Date.now();
     timerInterval = setInterval(updateTimer, 100);
+    isTimerRunning = true;
 }
 
 function updateTimer() {
@@ -138,7 +138,7 @@ function updateTimer() {
 function stopTimer() {
     clearInterval(timerInterval);
     const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(3);
-    
+    isTimerRunning = false;  // ✅ タイマーを停止済みにする
     // パズルが完成した場合のみランキングを更新
     if (checkCompletion()) {
         updateRanking(elapsedTime);
@@ -178,11 +178,14 @@ function updateRankingDisplay() {
 let timerStarted = false; // タイマーが開始されたかどうかを追跡
 // ----------------------------------
 function loadPuzzle() {
+    switchCSS();
+    console.log("フレームの下幅",pieceContainerHeight);
     stopTimer();
     timerStarted = false;
 
     puzzleContainer.innerHTML = "";
     pieces = [];
+    frames = [];
     const imageUrl = selectedImageUrl;
 
     const image = new Image();
@@ -198,12 +201,6 @@ function loadPuzzle() {
         puzzleContainer.style.width = `${imageWidth}px`;
         puzzleContainer.style.height = `${imageHeight}px`;
 
-        // 枠線用のフレームを追加
-        const puzzleFrame = document.createElement("div");
-        puzzleFrame.classList.add("puzzle-frame");
-        puzzleContainer.appendChild(puzzleFrame);
-
-        // 背景のグリッド (CSSで制御)
         puzzleContainer.classList.add("puzzle-grid");
         puzzleContainer.style.setProperty("--piece-width", `${pieceWidth}px`);
         puzzleContainer.style.setProperty("--piece-height", `${pieceHeight}px`);
@@ -217,11 +214,22 @@ function loadPuzzle() {
                 piece.style.width = `${pieceWidth}px`;
                 piece.style.height = `${pieceHeight}px`;
 
-                // 正解位置を保存
+                const frame = document.createElement("div");
+                frame.classList.add("puzzle-frame");
+                frame.style.width = `${pieceWidth}px`;
+                frame.style.height = `${pieceHeight}px`;
+                frame.style.left = `${col * pieceWidth}px`;
+                frame.style.top = `${row * pieceHeight}px`;
+                frame.dataset.correctX = col * pieceWidth;
+                frame.dataset.correctY = row * pieceHeight;
+                addFrameEvents(frame);
+
+                frames.push(frame);
+                puzzleContainer.appendChild(frame);
+
                 piece.dataset.correctX = col * pieceWidth;
                 piece.dataset.correctY = row * pieceHeight;
 
-                // 初期位置をランダムに設定 (CSSで制御)
                 if(Terminal===0){//横並び
                     piece.style.setProperty("--random-left", `${imageWidth + Math.random() * pieceContainerWidth}px`);
                     piece.style.setProperty("--random-top", `${Math.random() * (imageHeight - pieceHeight)}px`);
@@ -229,13 +237,19 @@ function loadPuzzle() {
                     piece.style.left = `${Math.random() * imageWidth * pieceContainerWidth}px`;
                     piece.style.top = `${imageHeight + Math.random() * pieceContainerHeight}px`;
                 }
+
+                piece.dataset.originalLeft = piece.style.left;
+                piece.dataset.originalTop = piece.style.top;
+
                 if (rotaON === 1) {
-                    // ランダム回転
                     const rotation = Math.floor(Math.random() * 4) * 90;
                     piece.style.transform = `rotate(${rotation}deg)`;
                 }
-                // タッチイベント追加
+
                 addTouchEvents(piece);
+
+                // fit 変数を追加
+                piece.dataset.fit = "0";
 
                 pieces.push(piece);
                 puzzleContainer.appendChild(piece);
@@ -243,104 +257,194 @@ function loadPuzzle() {
         }
     };
 }
+
+let selectedPiece = null;
+let selectedFrame = null;
+let lastTapTime = 0;
+
 function addTouchEvents(piece) {
-    let touchStartTime = 0;
-    let isDragging = false;
-    let startX = 0, startY = 0, offsetX = 0, offsetY = 0;
-    let isMoving = false;
-
+    
     piece.addEventListener("touchstart", function (e) {
-        touchStartTime = Date.now();
-        isDragging = false;
-
-        let touch = e.touches[0];
-        startX = touch.clientX;
-        startY = touch.clientY;
-        offsetX = piece.offsetLeft;
-        offsetY = piece.offsetTop;
+        let currentTime = Date.now();
+        let tapDuration = currentTime - lastTapTime;
+        lastTapTime = currentTime;
         if (!timerStarted) {
             startTimer(); // ✅ 初回のピース移動時にタイマーを開始
             timerStarted = true;
         }
-        // 長押し判定
-        setTimeout(() => {
-            if (Date.now() - touchStartTime >= 500) {
-                isDragging = true;
-                piece.classList.add("dragging");
+        if (tapDuration < 400) {
+            if(rotaON===1){
+                rotatePiece(piece);
             }
-        }, 500);
-    });
-
-    piece.addEventListener("touchmove", function (e) {
-        // if (isDragging) {
-            e.preventDefault(); // スクロール防止
-            let touch = e.touches[0];
-
-            let newX = offsetX + (touch.clientX - startX);
-            let newY = offsetY + (touch.clientY - startY);
-
-            // piece.style.left = `${newX}px`;
-            // piece.style.top = `${newY}px`;
-        //}
-        if (!isMoving) {
-            isMoving = true;
-            requestAnimationFrame(() => {
-                piece.style.left = `${newX}px`;
-                piece.style.top = `${newY}px`;
-                isMoving = false;
-            });
+            return;
         }
-    }, { passive: false });
 
-    piece.addEventListener("touchend", function (e) {
-        let touchTime = Date.now() - touchStartTime;
-
-        if (!isDragging && touchTime < 500) {
-            // タップなら回転
-            if (rotaON === 1) {
-                let currentRotation = parseInt(piece.style.transform.replace("rotate(", "").replace("deg)", "")) || 0;
-                piece.style.transform = `rotate(${(currentRotation + 90) % 360}deg)`;
-            }
+        if (selectedFrame) {
+            //console.log("枠が選択されているのでピースを配置");
+            placePiece(piece, selectedFrame);
         } else {
-            // スナップ処理
-            snapToGrid(piece);
-        }
-
-        isDragging = false;
-        piece.classList.remove("dragging");
-
-        // パズルの完成判定
-        if (checkCompletion()) {
-            stopTimer();
+            // ピース選択
+            selectPiece(piece);
         }
     });
 }
 
-function snapToGrid(piece) {
-    const correctX = parseInt(piece.dataset.correctX);
-    const correctY = parseInt(piece.dataset.correctY);
-    const currentX = parseInt(piece.style.left);
-    const currentY = parseInt(piece.style.top);
+function addFrameEvents(frame) {
+    frame.addEventListener("touchstart", function () {
+        if (selectedPiece) {
+            //console.log("選択中のピースをフレームに配置");
+            placePiece(selectedPiece, frame);
+        } else {
+            //console.log("フレーム選択");
+            selectFrame(frame);
+        }
+    });
+}
 
-    const threshold = 20; // スナップ許容範囲
-    // 現在の回転角度を取得（デフォルトは0度）
-    const transformValue = piece.style.transform;
-    const rotationMatch = transformValue.match(/rotate\((\d+)deg\)/);
-    const currentRotation = rotationMatch ? parseInt(rotationMatch[1]) % 360 : 0;
+function selectPiece(piece) {
+    if (selectedPiece) {
+        //console.log("以前のピース選択解除:", selectedPiece);
+        selectedPiece.classList.remove("selected");
+        selectedPiece.style.zIndex = "";
+    }
 
-    if (Math.abs(currentX - correctX) < threshold && Math.abs(currentY - correctY) < threshold && currentRotation === 0) {
-        piece.style.left = correctX + "px";
-        piece.style.top = correctY + "px";
-        piece.classList.add("correct"); // 正しく配置されたことを示す
+    if (piece.dataset.fit === "0") {
+        // fitが0なら選択し、フレームに配置
+        selectedPiece = piece;
+        selectedPiece.classList.add("selected");
+        selectedPiece.style.zIndex = "10";
+        piece.dataset.fit = "1"; // fitを1に設定
+        console.log(`選択中のピース - 元の座標: left=${piece.offsetLeft}, top=${piece.offsetTop}`);
+    } else {
+        // fitが1なら元の位置に戻す
+        returnToOriginalPosition(piece);
     }
 }
 
+function selectFrame(frame) {
+    frame.style.zIndex = "5";
+    if (selectedFrame) {
+        selectedFrame.classList.remove("selected-frame");
+        selectedFrame.style.zIndex = "";
+    }
+    selectedFrame = frame;
+    selectedFrame.classList.add("selected-frame");
+    console.log(`選択中の枠 - 座標: left=${frame.offsetLeft}, top=${frame.offsetTop}`);
+}
+
+function placePiece(piece, frame = selectedFrame) {
+    if (!frame) {
+        console.log("枠が選択されていないため配置不可");
+        return;
+    }
+
+    console.log("ピースを枠の位置にセット");
+
+    const scaleFactor = puzzleContainer.getBoundingClientRect().width / puzzleContainer.offsetWidth;
+    const frameRect = frame.getBoundingClientRect();
+    const containerRect = puzzleContainer.getBoundingClientRect();
+
+    const adjustedX = (frameRect.left - containerRect.left) / scaleFactor;
+    const adjustedY = (frameRect.top - containerRect.top) / scaleFactor;
+
+    piece.style.position = "absolute";
+    piece.style.left = `${adjustedX}px`;
+    piece.style.top = `${adjustedY}px`;
+
+    setTimeout(() => {
+        piece.classList.remove("selected");
+        frame.classList.remove("selected-frame");
+        selectedPiece = null;
+        selectedFrame = null;
+
+        console.log("ピース配置完了。完成チェック実行");
+        checkCompletion();
+    }, 100);
+}
+
+function returnToOriginalPosition(piece) {
+    piece.style.left = piece.dataset.originalLeft;
+    piece.style.top = piece.dataset.originalTop;
+    piece.classList.remove("selected");
+    piece.dataset.fit = "0"; // fitを0に戻す
+    selectedPiece = null;
+    console.log("ピースが元の位置に戻りました");
+}
+
+function getRotation(piece) {
+    let transformValue = piece.style.transform;
+    let rotationMatch = transformValue.match(/rotate\((\d+)deg\)/);
+    return rotationMatch ? parseInt(rotationMatch[1]) % 360 : 0;
+}
+
+function rotatePiece(piece) {
+    let currentRotation = getRotation(piece);
+    let newRotation = (currentRotation + 90) % 360;
+    piece.style.transform = `rotate(${newRotation}deg)`;
+}
+
+
 function checkCompletion() {
-    let completed = pieces.every(piece => piece.classList.contains("correct"));
+    pieces.forEach(piece => {
+        let correctX = parseInt(piece.dataset.correctX);
+        let correctY = parseInt(piece.dataset.correctY);
     
+        // 位置を比較する際の許容範囲
+        let allowedPositionDeviation = 10; // ±10pxのズレを許容
+        let allowedRotationDeviation = 10; // ±10度の回転ズレを許容
+    
+        let currentX = parseInt(piece.style.left); // style.left を使って位置比較
+        let currentY = parseInt(piece.style.top);
+    
+        // 回転を比較する際の許容範囲
+        let currentRotation = getRotation(piece);
+        let isCorrectPosition = Math.abs(currentX - correctX) <= allowedPositionDeviation &&
+                                Math.abs(currentY - correctY) <= allowedPositionDeviation;
+        let isCorrectRotation = Math.abs(currentRotation - 0) <= allowedRotationDeviation; // 回転が0度に近いか
+    
+        // 位置と回転が正しい場合、correctクラスを追加
+        if (isCorrectPosition && isCorrectRotation) {
+            piece.classList.add("correct"); // 正しい位置に配置されているピースに緑の縁取りを追加
+            piece.classList.remove("uncorrect");
+        } else {
+            piece.classList.remove("correct"); // 間違った位置の場合はremove
+            piece.classList.add("uncorrect");
+        }
+    });
+    
+    let completed = pieces.every(piece => {
+        let correctX = parseInt(piece.dataset.correctX);
+        let correctY = parseInt(piece.dataset.correctY);
+
+        // 位置を比較する際の許容範囲
+        let allowedPositionDeviation = 10; // ±5pxのズレを許容
+        let allowedRotationDeviation = 10; // ±5度の回転ズレを許容
+
+        let currentX = parseInt(piece.style.left); // style.left を使って位置比較
+        let currentY = parseInt(piece.style.top);
+
+        // 回転を比較する際の許容範囲
+        let currentRotation = getRotation(piece);
+        let isCorrectPosition = Math.abs(currentX - correctX) <= allowedPositionDeviation &&
+                                Math.abs(currentY - correctY) <= allowedPositionDeviation;
+        let isCorrectRotation = Math.abs(currentRotation - 0) <= allowedRotationDeviation; // 回転が0度に近いか
+
+        // 位置と回転が正しい場合、correctクラスを追加
+        if (isCorrectPosition && isCorrectRotation) {
+            piece.classList.remove("correct"); 
+        } 
+
+        return isCorrectPosition && isCorrectRotation;
+    });
+
     if (completed) {
+        if (isTimerRunning) {
+            console.log("パズル完成！タイマーを停止");
+            stopTimer();
+        }
         return true;
     } else {
+        console.log("未完成のピースあり");
         return false;
     }
 }

@@ -4,6 +4,8 @@ body {
         radial-gradient(circle, rgba(255, 230, 200, 0.8) 10%, rgba(200, 150, 100, 0.6) 90%),
         repeating-linear-gradient(45deg, #D2B48C, #D2B48C 5px, #C8A278 5px, #C8A278 10px);
     background-size: cover;
+    touch-action: none;
+    overflow: hidden;
 }
 
 #puzzle-container {
@@ -15,6 +17,10 @@ body {
 
 .correct {
     border: 1.5px solid green;
+}
+
+.uncorrect{
+    border: 2.5px solid red;
 }
 h1 {
     width: 60%;
@@ -204,7 +210,7 @@ h1 {
     #timer {
         font-size: 80%;
         margin-bottom: 3%;  
-        width: 70%;
+        width: 83%;
         padding:1% 0 1% 0; 
     }
     
