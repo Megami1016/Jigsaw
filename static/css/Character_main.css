@@ -180,6 +180,148 @@ option:hover {
     transform: translateY(2px); /* クリック時に少し沈むエフェクト */
 }
 
+/* ---------------------------- */
+#ranking {
+    background-color: rgba(255, 255, 255, 0.75); /* 少しだけ不透明度を増やす */
+    border: 3px solid rgba(139, 94, 60, 0.8); /* ブラウンの透明感 */
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px auto;
+    width: 85%;
+    max-width: 1200px; /* 横幅が大きくなりすぎないように */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* 影を少し薄く */
+    background-clip: padding-box;
+    text-align: center;
+    overflow-x: auto; /* 横スクロール対応 */
+}
+
+#ranking h2 {
+    color: rgba(139, 94, 60, 0.9);
+    font-size: 24px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* アイコンとの間隔を確保 */
+}
+
+#ranking h2 img {
+    width: 24px; /* アイコンの大きさ調整 */
+    height: 24px;
+    vertical-align: middle;
+}
+
+#ranking-table {
+    width: 80%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+#ranking-table th, #ranking-table td {
+    border: 2px solid rgba(139, 94, 60, 0.6); /* 枠線も透明感 */
+    padding: 12px 8px;
+    text-align: center;
+    min-width: 60px; /* 最小幅を確保 */
+}
+
+#ranking-table th {
+    background-color: rgba(238, 213, 183, 0.8); /* ベージュを少し透明に */
+    font-size: 18px;
+}
+
+#ranking-table tr:nth-child(1) td {
+    background-color: rgba(255, 215, 0, 0.7); /* ゴールドの透明感 */
+    font-weight: bold;
+}
+
+#ranking-table tr:nth-child(2) td {
+    background-color: rgba(192, 192, 192, 0.7); /* シルバーの透明感 */
+    font-weight: bold;
+}
+
+#ranking-table tr:nth-child(3) td {
+    background-color: rgba(205, 127, 50, 0.7); /* ブロンズの透明感 */
+    font-weight: bold;
+}
+
+#ranking-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.5); /* 偶数行の透明感 */
+}
+
+#ranking-table th[colspan="2"] {
+    background-color: rgba(210, 180, 140, 0.7); /* タン色を半透明 */
+    font-size: 18px;
+    padding: 10px;
+}
+
+/* タイムのホバー表示 */
+.time {
+    cursor: pointer;
+    text-decoration: underline dotted;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+}
+
+/* タップ時に表示するポップアップ */
+.time::after {
+    content: attr(data-name);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* タップ時に表示 */
+.time.active::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+.crown-icon {
+    width: 30px;  /* サイズを適宜調整 */
+    height: auto;
+    vertical-align: middle; /* 文字と高さを揃える */
+    margin : 0 2px 0 2px; /* 文字との間隔を空ける */
+}
+
+.easy-icon{
+    width: 60px;
+    height: auto;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.normal-icon{
+    width: 35px;
+    height: auto;
+    vertical-align: middle;
+    margin-left: 4px
+}
+
+.hard-icon{
+    width: 35px;
+    height: auto;
+    vertical-align: middle;
+    margin-left: 4px
+}
+
+.veryHard-icon{
+    width: 35px;
+    height: auto;
+    vertical-align: middle;
+    margin-left: 4px
+}
 
 /* スマホ（iPhone 13-16, Android 390px～414px） */
 @media screen and (max-width: 460px) {
