@@ -181,6 +181,19 @@ h1 {
     cursor: grab;
 }
 
+.rotate-button {
+    position: absolute;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
 
 /* スマホ（iPhone 13-16, Android 390px～414px） */
 @media screen and (max-width: 480px) {

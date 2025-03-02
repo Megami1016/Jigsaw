@@ -259,6 +259,7 @@ function loadPuzzle() {
 }
 
 let selectedPiece = null;
+let rotateButton = null;
 let selectedFrame = null;
 let lastTapTime = 0;
 
@@ -266,18 +267,18 @@ function addTouchEvents(piece) {
     
     piece.addEventListener("touchstart", function (e) {
         let currentTime = Date.now();
-        let tapDuration = currentTime - lastTapTime;
+        //let tapDuration = currentTime - lastTapTime;
         lastTapTime = currentTime;
         if (!timerStarted) {
             startTimer(); // ✅ 初回のピース移動時にタイマーを開始
             timerStarted = true;
         }
-        if (tapDuration < 400) {
-            if(rotaON===1){
-                rotatePiece(piece);
-            }
-            return;
-        }
+        // if (tapDuration < 400) {
+        //     if(rotaON===1){
+        //         rotatePiece(piece);
+        //     }
+        //     return;
+        // }
 
         if (selectedFrame) {
             //console.log("枠が選択されているのでピースを配置");
@@ -306,6 +307,9 @@ function selectPiece(piece) {
         //console.log("以前のピース選択解除:", selectedPiece);
         selectedPiece.classList.remove("selected");
         selectedPiece.style.zIndex = "";
+        if(rotaON===1){
+            removeRotateButton();
+        } 
     }
 
     if (piece.dataset.fit === "0") {
@@ -314,12 +318,48 @@ function selectPiece(piece) {
         selectedPiece.classList.add("selected");
         selectedPiece.style.zIndex = "10";
         piece.dataset.fit = "1"; // fitを1に設定
-        console.log(`選択中のピース - 元の座標: left=${piece.offsetLeft}, top=${piece.offsetTop}`);
+        if(rotaON===1){
+            showRotateButton(piece); // 回転ボタンを表示
+        }
+        
     } else {
         // fitが1なら元の位置に戻す
         returnToOriginalPosition(piece);
     }
 }
+
+function showRotateButton(piece) {
+    removeRotateButton(); // 既存のボタンを削除
+
+    rotateButton = document.createElement("button");
+    rotateButton.textContent = "⟳";
+    rotateButton.classList.add("rotate-button");
+
+    // ピースの位置にボタンを配置
+    // const pieceRect = piece.getBoundingClientRect();
+    // rotateButton.style.left = `${pieceRect.left + pieceRect.width / 2}px`;
+    // rotateButton.style.top = `${pieceRect.top - 30}px`;
+    // 🔹 開発者が直接座標を調整できるように設定
+    // 
+    // パズルのコンテナの位置を基準にボタンを配置
+    const containerRect = puzzleContainer.getBoundingClientRect();
+
+    // 回転ボタンを大枠（コンテナ）の上側に配置
+    rotateButton.style.position = "absolute"; // 絶対位置を設定
+    rotateButton.style.left = `${containerRect.left}px`; // パズルコンテナの左端に合わせる
+    rotateButton.style.top = `${containerRect.top - 30}px`; // パズルコンテナの上側に配置（30px上）
+    rotateButton.addEventListener("click", () => rotatePiece(piece));
+
+    document.body.appendChild(rotateButton);
+}
+
+function removeRotateButton() {
+    if (rotateButton) {
+        rotateButton.remove();
+        rotateButton = null;
+    }
+}
+
 
 function selectFrame(frame) {
     frame.style.zIndex = "5";
@@ -354,6 +394,10 @@ function placePiece(piece, frame = selectedFrame) {
     setTimeout(() => {
         piece.classList.remove("selected");
         frame.classList.remove("selected-frame");
+
+        // fit=1に設定
+        piece.dataset.fit = "1";
+
         selectedPiece = null;
         selectedFrame = null;
 
@@ -367,6 +411,11 @@ function returnToOriginalPosition(piece) {
     piece.style.top = piece.dataset.originalTop;
     piece.classList.remove("selected");
     piece.dataset.fit = "0"; // fitを0に戻す
+     // フレームのzIndexを元に戻す（親要素を取得）
+     const frame = piece.parentElement;
+     if (frame && frame.classList.contains("frame")) {
+         frame.style.zIndex = ""; // デフォルトの値に戻す
+     }
     selectedPiece = null;
     console.log("ピースが元の位置に戻りました");
 }
@@ -381,10 +430,13 @@ function rotatePiece(piece) {
     let currentRotation = getRotation(piece);
     let newRotation = (currentRotation + 90) % 360;
     piece.style.transform = `rotate(${newRotation}deg)`;
+    checkCompletion();
 }
 
 
 function checkCompletion() {
+    // すべてのフレーム要素を取得
+    let allFrames = document.querySelectorAll(".frame");
     pieces.forEach(piece => {
         let correctX = parseInt(piece.dataset.correctX);
         let correctY = parseInt(piece.dataset.correctY);
@@ -438,6 +490,10 @@ function checkCompletion() {
     });
 
     if (completed) {
+        // 🔹 すべてのフレームのボーダーを非表示にする
+        allFrames.forEach(frame => {
+            frame.style.border = "none";
+        });
         if (isTimerRunning) {
             console.log("パズル完成！タイマーを停止");
             stopTimer();
