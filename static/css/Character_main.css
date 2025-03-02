@@ -215,6 +215,7 @@ option:hover {
     width: 80%;
     border-collapse: collapse;
     border-spacing: 0;
+    margin: 0 auto; /* テーブルを中央に配置 */
 }
 
 #ranking-table th, #ranking-table td {
