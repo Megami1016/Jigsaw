@@ -255,13 +255,11 @@ option:hover {
     padding: 10px;
 }
 
-/* タイムのホバー表示 */
+/* .time 要素に相対位置を設定 */
 .time {
-    cursor: pointer;
-    text-decoration: underline dotted;
-    font-weight: bold;
-    position: relative;
-    display: inline-block;
+    position: relative; /* ポップアップがこの要素を基準に表示されるようにする */
+    cursor: pointer; /* ホバーできるように */
+    text-decoration: underline dotted; /* タイムを強調 */
 }
 
 /* タップ時に表示するポップアップ */
@@ -280,13 +278,19 @@ option:hover {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease-in-out;
+    width: 80px;
+    height: 20px;
+    display: none; /* 初期状態で非表示にする */
 }
 
 /* タップ時に表示 */
 .time.active::after {
     opacity: 1;
     visibility: visible;
+    display: block; /* 表示時にブロック要素として表示 */
 }
+
+
 
 
 .crown-icon {

@@ -211,6 +211,7 @@ document.getElementById("Character").addEventListener("change", function() {
         });
 });
 
+
 document.querySelectorAll(".time").forEach(el => {
     el.addEventListener("click", function() {
         // すべての `.time` から `active` を削除
@@ -224,14 +225,4 @@ document.querySelectorAll(".time").forEach(el => {
         this.classList.toggle("active");
     });
 });
-
-// スマホでの誤動作防止（画面外をタップすると閉じる）
-document.addEventListener("click", function(event) {
-    if (!event.target.classList.contains("time")) {
-        document.querySelectorAll(".time").forEach(item => {
-            item.classList.remove("active");
-        });
-    }
-});
-
 
