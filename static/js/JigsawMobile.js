@@ -60,13 +60,13 @@ const RANKING_KEY = {
 
 // 難易度ごとのデフォルトランキング（5位までのデフォルトタイム）
 const DEFAULT_RANKING = {
-    easy: [60, 60, 60, 60, 60],
-    normal: [300, 300, 300, 300, 300],
-    hard: [1200, 1200, 1200, 1200, 1200],
-    veryHard: [3000, 3000, 3000, 3000, 3000]
+    easy: [60, 60, 60],
+    normal: [300, 300, 300],
+    hard: [1200, 1200, 1200],
+    veryHard: [3000, 3000, 3000]
 };
 
-// 初回のみデフォルトのランキングをセット
+// 初回のみデフォルトのランキングをセット＆4~5位を削除
 function initializeRanking() {
     Object.keys(RANKING_KEY).forEach(difficulty => {
         let storedData = localStorage.getItem(RANKING_KEY[difficulty]);
@@ -78,10 +78,19 @@ function initializeRanking() {
             try {
                 // データが正しくパースできるか確認し、不正ならデフォルトをセット
                 let parsedData = JSON.parse(storedData);
-                if (!Array.isArray(parsedData) || parsedData.length !== 5) {
+                
+                // 配列でなかったり、長さが5より大きい場合、デフォルトにリセット
+                if (!Array.isArray(parsedData) || parsedData.length < 3) {
                     throw new Error("Invalid data format");
                 }
+
+                // 4位・5位のデータを削除し、3位までに制限
+                let trimmedData = parsedData.slice(0, 3);
+                
+                // 更新したランキングをローカルストレージに保存
+                localStorage.setItem(RANKING_KEY[difficulty], JSON.stringify(trimmedData));
             } catch (error) {
+                // データが壊れていた場合、デフォルトのランキングをセット
                 localStorage.setItem(RANKING_KEY[difficulty], JSON.stringify(DEFAULT_RANKING[difficulty]));
             }
         }
