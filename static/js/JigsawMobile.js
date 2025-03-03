@@ -151,7 +151,7 @@ function updateRanking(clearTime) {
 
     ranking.push(parseFloat(clearTime));
     ranking.sort((a, b) => a - b); // 昇順ソート
-    ranking = ranking.slice(0, 5); // 上位5件のみ保持
+    ranking = ranking.slice(0, 3); // 上位3件のみ保持
 
     localStorage.setItem(key, JSON.stringify(ranking));
     updateRankingDisplay();
@@ -242,7 +242,7 @@ function loadPuzzle() {
                 piece.dataset.originalTop = piece.style.top;
 
                 if (rotaON === 1) {
-                    const rotation = Math.floor(Math.random() * 4) * 90;
+                    const rotation = Math.floor(Math.random() * 2) * 180;
                     piece.style.transform = `rotate(${rotation}deg)`;
                 }
 
@@ -250,6 +250,8 @@ function loadPuzzle() {
 
                 // fit 変数を追加
                 piece.dataset.fit = "0";
+                // correct 変数を追加
+                piece.dataset.correct = "0";
 
                 pieces.push(piece);
                 puzzleContainer.appendChild(piece);
@@ -406,6 +408,22 @@ function placePiece(piece, frame = selectedFrame) {
     }, 100);
 }
 
+function refreshPuzzle() {
+    console.log("リフレッシュボタンが押されました");
+
+    pieces.forEach(piece => {
+        let isFit = piece.dataset.fit === "1"; 
+        let isCorrect = piece.dataset.correct === "1"; 
+
+        if (!(isFit && isCorrect)) { 
+            returnToOriginalPosition(piece);
+        }
+    });
+
+    console.log("リフレッシュ完了");
+}
+
+
 function returnToOriginalPosition(piece) {
     piece.style.left = piece.dataset.originalLeft;
     piece.style.top = piece.dataset.originalTop;
@@ -428,7 +446,7 @@ function getRotation(piece) {
 
 function rotatePiece(piece) {
     let currentRotation = getRotation(piece);
-    let newRotation = (currentRotation + 90) % 360;
+    let newRotation = (currentRotation + 180) % 360;
     piece.style.transform = `rotate(${newRotation}deg)`;
     checkCompletion();
 }
@@ -437,7 +455,7 @@ function rotatePiece(piece) {
 function checkCompletion() {
     // すべてのフレーム要素を取得
     let allFrames = document.querySelectorAll(".frame");
-    pieces.forEach(piece => {
+    pieces.forEach(piece => {//一枚ずつ正解判定をする
         let correctX = parseInt(piece.dataset.correctX);
         let correctY = parseInt(piece.dataset.correctY);
     
@@ -458,13 +476,15 @@ function checkCompletion() {
         if (isCorrectPosition && isCorrectRotation) {
             piece.classList.add("correct"); // 正しい位置に配置されているピースに緑の縁取りを追加
             piece.classList.remove("uncorrect");
+            piece.dataset.correct = "1"; 
         } else {
             piece.classList.remove("correct"); // 間違った位置の場合はremove
             piece.classList.add("uncorrect");
+            piece.dataset.correct = "0";
         }
     });
     
-    let completed = pieces.every(piece => {
+    let completed = pieces.every(piece => {//全てのピースが正解しているか判定
         let correctX = parseInt(piece.dataset.correctX);
         let correctY = parseInt(piece.dataset.correctY);
 
@@ -507,5 +527,4 @@ function checkCompletion() {
 
 window.onload = function() {
     loadPuzzle(); // ✅ パズルをロード
-    document.getElementById("message").innerText = ""; // ✅ メッセージをクリア
 };

@@ -48,26 +48,29 @@
             <div id="ranking"></div>
             <form id="setting">
                 <!-- 1列目: ボタン -->
-    <div class="setting-group">
-        <button type="button" onclick="loadPuzzle()">パズルを生成する</button>
-    </div>
+                <div class="setting-group">
+                    <button type="button" onclick="loadPuzzle()">パズルを生成する</button>
+                </div>
+                <!-- 2列目: リフレッシュボタン -->
+                <div class="setting-group">
+                    <button type="button" onclick="refreshPuzzle()">リフレッシュ</button>
+                </div>
+                <!-- 3列目: ビギナー & エキスパート -->
+                <div class="setting-group">
+                    <label><input type="radio" name="level" value="easy" checked>ビギナー</label>
+                    <label><input type="radio" name="level" value="normal">エキスパート</label>
+                </div>
 
-    <!-- 2列目: ビギナー & エキスパート -->
-    <div class="setting-group">
-        <label><input type="radio" name="level" value="easy" checked>ビギナー</label>
-        <label><input type="radio" name="level" value="normal">エキスパート</label>
-    </div>
-
-    <!-- 3列目: カオス & アンノウン -->
-    <div class="setting-group">
-        <label><input type="radio" name="level" value="hard">カオス</label>
-        <label><input type="radio" name="level" value="veryHard">アンノウン</label>
-    </div>
+                <!-- 4列目: カオス & アンノウン -->
+                <div class="setting-group">
+                    <label><input type="radio" name="level" value="hard">カオス</label>
+                    <label><input type="radio" name="level" value="veryHard">アンノウン</label>
+                </div>
             </form>
         </div>
     </div>
     <div id="puzzle-container"></div>
-    <p id="message"></p>
+    
     
 <!-- <script src="{{ url_for('static', filename='js/JigsawMobile.js') }}"></script> -->
 </script>

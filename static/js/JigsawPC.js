@@ -237,13 +237,13 @@ function loadPuzzle() {
                 }
                 if (rotaON === 1) {
                     // ランダム回転
-                    const rotation = Math.floor(Math.random() * 4) * 90;
+                    const rotation = Math.floor(Math.random() * 2) * 180;
                     piece.style.transform = `rotate(${rotation}deg)`;
 
-                    // クリックで90度回転
+                    // クリックで180度回転
                      piece.addEventListener("click", function () {
                          let currentRotation = parseInt(piece.style.transform.replace("rotate(", "").replace("deg)", "")) || 0;
-                         currentRotation = (currentRotation + 90) % 360;
+                         currentRotation = (currentRotation + 180) % 360;
                          piece.style.transform = `rotate(${currentRotation}deg)`;
                      });
                 }
@@ -292,7 +292,7 @@ let draggedPiece = null;
 function rotatePiece(event) {
     let piece = event.target;
     let currentRotation = parseInt(piece.style.transform.replace('rotate(', '').replace('deg)', '')) || 0;
-    currentRotation = (currentRotation + 90) % 360;
+    currentRotation = (currentRotation + 180) % 360;
     piece.style.transform = `rotate(${currentRotation}deg)`;
 }
 
