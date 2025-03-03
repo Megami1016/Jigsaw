@@ -371,4 +371,6 @@ function checkCompletion() {
 window.onload = function() {
     loadPuzzle(); // ✅ パズルをロード
     document.getElementById("message").innerText = ""; // ✅ メッセージをクリア
+    document.addEventListener("DOMContentLoaded", updateRankingDisplay);
 };
+

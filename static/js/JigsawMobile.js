@@ -536,4 +536,5 @@ function checkCompletion() {
 
 window.onload = function() {
     loadPuzzle(); // ✅ パズルをロード
+    document.addEventListener("DOMContentLoaded", updateRankingDisplay);
 };
